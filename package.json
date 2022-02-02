@@ -15,7 +15,8 @@
   "author": "Davydkin Valery",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "tslog": "^3.3.1"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",
