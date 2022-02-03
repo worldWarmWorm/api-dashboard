@@ -1,39 +1,39 @@
-import express, { Express } from "express";
-import { Server } from "http";
-import { inject, injectable } from "inversify";
-import { ExceprionFilter } from "./errors/ExceprionFilter";
-import { ILogger } from "./logger/ILogger";
-import { TYPES } from "./types";
-import { UsersController } from "./users/UsersController";
-import "reflect-metadata";
+import express, { Express } from 'express';
+import { Server } from 'http';
+import { inject, injectable } from 'inversify';
+import { ExceprionFilter } from './errors/ExceprionFilter';
+import { ILogger } from './logger/ILogger';
+import { TYPES } from './types';
+import { UsersController } from './users/UsersController';
+import 'reflect-metadata';
 
 @injectable()
 export class App {
-  app: Express;
-  server: Server;
-  port: number;
+	app: Express;
+	server: Server;
+	port: number;
 
-  constructor(
-    @inject(TYPES.ILogger) private logger: ILogger,
-    @inject(TYPES.UsersController) private usersController: UsersController,
-    @inject(TYPES.ExceprionFilter) private exceprionFilter: ExceprionFilter
-  ) {
-    this.app = express();
-    this.port = 8000;
-  }
+	constructor(
+		@inject(TYPES.ILogger) private logger: ILogger,
+		@inject(TYPES.UsersController) private usersController: UsersController,
+		@inject(TYPES.ExceprionFilter) private exceprionFilter: ExceprionFilter,
+	) {
+		this.app = express();
+		this.port = 8000;
+	}
 
-  useRoutes() {
-    this.app.use("/users", this.usersController.router);
-  }
+	useRoutes(): void {
+		this.app.use('/users', this.usersController.router);
+	}
 
-  useExceptionFilters() {
-    this.app.use(this.exceprionFilter.catch.bind(this.exceprionFilter));
-  }
+	useExceptionFilters(): void {
+		this.app.use(this.exceprionFilter.catch.bind(this.exceprionFilter));
+	}
 
-  public async init() {
-    this.useRoutes();
-    this.useExceptionFilters();
-    this.server = this.app.listen(this.port);
-    this.logger.log(`Server started at http://localhost:${this.port}`);
-  }
+	public async init(): Promise<void> {
+		this.useRoutes();
+		this.useExceptionFilters();
+		this.server = this.app.listen(this.port);
+		this.logger.log(`Server started at http://localhost:${this.port}`);
+	}
 }
