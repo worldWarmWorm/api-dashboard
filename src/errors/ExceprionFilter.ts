@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { LoggerService } from "../logger/LoggerService";
+import { inject, injectable } from "inversify";
+import { ILogger } from "../logger/ILogger";
+import { TYPES } from "../types";
 import { HttpError } from "./HttpError";
 import { IExceptionFilter } from "./IExceptionFilter";
+import "reflect-metadata";
 
+@injectable()
 export class ExceprionFilter implements IExceptionFilter {
-  logger: LoggerService;
-
-  constructor(logger: LoggerService) {
-    this.logger = logger;
-  }
+  constructor(@inject(TYPES.ILogger) private logger: ILogger) { }
 
   catch(err: Error | HttpError, req: Request, res: Response, next: NextFunction) {
     if (err instanceof HttpError) {
