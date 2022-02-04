@@ -1,12 +1,13 @@
 import express, { Express } from 'express';
 import { Server } from 'http';
 import { inject, injectable } from 'inversify';
-import { ExceprionFilter } from './errors/ExceprionFilter';
+import { IExceptionFilter } from './errors/IExceptionFilter';
 import { ILogger } from './logger/ILogger';
 import { TYPES } from './types';
 import { UsersController } from './controller/user/UsersController';
 import { json } from 'body-parser';
 import 'reflect-metadata';
+import { IConfigService } from './config/IConfigService';
 
 @injectable()
 export class App {
@@ -15,9 +16,17 @@ export class App {
 	port: number;
 
 	constructor(
-		@inject(TYPES.ILogger) private logger: ILogger,
-		@inject(TYPES.UsersController) private usersController: UsersController,
-		@inject(TYPES.ExceprionFilter) private exceprionFilter: ExceprionFilter,
+		@inject(TYPES.ILogger)
+		private logger: ILogger,
+
+		@inject(TYPES.UsersController)
+		private usersController: UsersController,
+
+		@inject(TYPES.ExceptionFilter)
+		private exceptionFilter: IExceptionFilter,
+
+		@inject(TYPES.ConfigService)
+		private configService: IConfigService,
 	) {
 		this.app = express();
 		this.port = 8000;
@@ -32,7 +41,7 @@ export class App {
 	}
 
 	useExceptionFilters(): void {
-		this.app.use(this.exceprionFilter.catch.bind(this.exceprionFilter));
+		this.app.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
 	}
 
 	public async init(): Promise<void> {

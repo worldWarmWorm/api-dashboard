@@ -7,8 +7,11 @@ import { IExceptionFilter } from './IExceptionFilter';
 import 'reflect-metadata';
 
 @injectable()
-export class ExceprionFilter implements IExceptionFilter {
-	constructor(@inject(TYPES.ILogger) private logger: ILogger) {}
+export class ExceptionFilter implements IExceptionFilter {
+	constructor(
+		@inject(TYPES.ILogger)
+		private logger: ILogger,
+	) {}
 
 	catch(err: Error | HttpError, req: Request, res: Response, next: NextFunction): void {
 		if (err instanceof HttpError) {

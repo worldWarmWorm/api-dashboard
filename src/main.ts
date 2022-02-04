@@ -1,6 +1,6 @@
 import { Container, ContainerModule, interfaces } from 'inversify';
 import { App } from './App';
-import { ExceprionFilter } from './errors/ExceprionFilter';
+import { ExceptionFilter } from './errors/ExceptionFilter';
 import { IExceptionFilter } from './errors/IExceptionFilter';
 import { ILogger } from './logger/ILogger';
 import { LoggerService } from './logger/LoggerService';
@@ -9,6 +9,8 @@ import { IUsersController } from './controller/user/IUsersController';
 import { UsersController } from './controller/user/UsersController';
 import { IUserService } from './entity/users/IUserService';
 import { UserService } from './entity/users/UserService';
+import { IConfigService } from './config/IConfigService';
+import { ConfigService } from './config/ConfigService';
 
 export interface IBootstrap {
 	appContainer: Container;
@@ -17,10 +19,11 @@ export interface IBootstrap {
 
 // DI tree
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
-	bind<ILogger>(TYPES.ILogger).to(LoggerService);
-	bind<IExceptionFilter>(TYPES.ExceprionFilter).to(ExceprionFilter);
+	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
+	bind<IExceptionFilter>(TYPES.ExceptionFilter).to(ExceptionFilter);
 	bind<IUsersController>(TYPES.UsersController).to(UsersController);
 	bind<IUserService>(TYPES.UserService).to(UserService);
+	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
 	bind<App>(TYPES.Application).to(App);
 });
 
