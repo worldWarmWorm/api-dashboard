@@ -9,11 +9,15 @@ import { IUsersController } from './IUsersController';
 import { UserLoginDto } from '../../entity/users/dto/UserLoginDto';
 import { UserRegisterDto } from '../../entity/users/dto/UserRegisterDto';
 import { User } from '../../entity/users/User';
+import { UserService } from '../../entity/users/UserService';
 
 @injectable()
 export class UsersController extends BaseController implements IUsersController {
-	constructor(@inject(TYPES.ILogger) private LoggerService: ILogger) {
-		super(LoggerService);
+	constructor(
+		@inject(TYPES.ILogger) private loggerService: ILogger,
+		@inject(TYPES.UserService) private userService: UserService,
+	) {
+		super(loggerService);
 		this.bindRoutes([
 			{ path: '/register', method: 'post', func: this.register },
 			{ path: '/login', method: 'post', func: this.login },
@@ -26,8 +30,10 @@ export class UsersController extends BaseController implements IUsersController 
 	}
 
 	async register({ body }: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): Promise<void> {
-		const newUser = new User(body.email, body.name);
-		await newUser.setPassword(body.password);
-		this.ok(res, newUser);
+		const result = await this.userService.createUser(body);
+		if (!result) {
+			return next(new HttpError(422, 'User like that already exist'));
+		}
+		this.ok(res, { email: result.email });
 	}
 }
