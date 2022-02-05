@@ -1,16 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { inject, injectable } from 'inversify';
-import { BaseController } from '../../common/BaseController';
-import { HttpError } from '../../errors/HttpError';
-import { ILogger } from '../../logger/ILogger';
-import { TYPES } from '../../types';
+import { BaseController } from '../../../common/BaseController';
+import { HttpError } from '../../../errors/HttpError';
+import { ILogger } from '../../../logger/ILogger';
+import { TYPES } from '../../../types';
 import 'reflect-metadata';
 import { IUsersController } from './IUsersController';
-import { UserLoginDto } from '../../entity/users/dto/UserLoginDto';
-import { UserRegisterDto } from '../../entity/users/dto/UserRegisterDto';
-import { User } from '../../entity/users/User';
-import { UserService } from '../../entity/users/UserService';
-import { ValidateMiddleware } from '../../common/middleware/ValidateMiddleware';
+import { UserLoginDto } from '../dto/UserLoginDto';
+import { UserRegisterDto } from '../dto/UserRegisterDto';
+import { User } from '../User';
+import { UserService } from '../UserService';
+import { ValidateMiddleware } from '../../../common/middleware/ValidateMiddleware';
 
 @injectable()
 export class UsersController extends BaseController implements IUsersController {
@@ -43,6 +43,6 @@ export class UsersController extends BaseController implements IUsersController 
 		if (!result) {
 			return next(new HttpError(422, 'User like that already exist'));
 		}
-		this.ok(res, { email: result.email });
+		this.ok(res, { email: result.email, id: result.id });
 	}
 }

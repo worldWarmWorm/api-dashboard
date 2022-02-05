@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 import { IExceptionFilter } from './errors/IExceptionFilter';
 import { ILogger } from './logger/ILogger';
 import { TYPES } from './types';
-import { UsersController } from './controller/user/UsersController';
+import { UsersController } from './entity/users/controller/UsersController';
 import { json } from 'body-parser';
 import 'reflect-metadata';
 import { IConfigService } from './config/IConfigService';
